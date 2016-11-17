@@ -1,3 +1,8 @@
+var startModal = document.getElementById('startModal');
+var coreModal = document.getElementById('coreModal');
+
+var startButton = document.getElementById('startButton');
+
 var wheelLocation = document.getElementById('wheelLocation');
 var phraseBoard = document.getElementById('phraseBoard');
 var scoreBox = document.getElementById('scoreBox');
@@ -11,7 +16,7 @@ var solveInput = document.getElementById('solveInput');
 var solveOrSpinOptions = document.getElementById('solveOrSpinOptions');
 var solveOption = document.getElementById('solveOption');
 var spinOption = document.getElementById('spinOption');
-//var guessOrBuyOption = document.getElementById('guessOrBuyOption');
+var guessOrBuyOption = document.getElementById('guessOrBuyOption');
 
 //using these to hold button value of true or false
 //var chooseConstanantButton = document.getElementById('chooseConstanant');
@@ -67,13 +72,20 @@ var wheelOfFortune = {
 }
 
 
+function randomNumberGenerator(){
+
+    return Math.round(Math.random() * 20) + 1;
+
+}
+
 function spinTheWheel(){
 
     console.log('spin the wheel is invoked');
-    var count = 0; //would be a random number
+    var count = 0;
+    var randomNumber = randomNumberGenerator();
     var spin = setInterval(function(){
 
-        if(count === 20){
+        if(count === 20 + randomNumber){
 
             clearInterval(spin);
             console.log('now it should check play or bankrupt')
@@ -87,7 +99,7 @@ function spinTheWheel(){
 
         }
 
-    }, 400)
+    }, 300)
     
 }
 
@@ -191,16 +203,17 @@ $('#letterInput').keypress(function(event){
 
                         console.log('was found in used list');
                         console.log('this will lead to a loss of turn or spin');
-                         
+                        toggleSpinButtonOn();
 
 
                     }else{
 
                         console.log('was not found in used list');
                         console.log('this is where we will play the board');
+                        toggleSelectLettersBoxOff();
                         wheelOfFortune.lettersUsed.push(wheelOfFortune.constSelected.toLowerCase());
                         checkBoardForLetter('constanant',wheelOfFortune.constSelected.toLowerCase());
-
+                        
                     }
 
                 }else{
@@ -297,16 +310,17 @@ function checkBoardForLetter(vowOrCons, letter){
 
         renderPhraseBoard(wheelOfFortune.phraseOnBoard.phraseAsArray);
         deductForVowel();
+        toggleSolveOrSpinOn();
         //continue with new letter guess or spin
 
     }else if(changeInBoard === false && vowOrCons === 'vowel'){
 
         deductForVowel();
-        //lose turn 
+        toggleSpinButtonOn();
 
     }else if(changeInBoard === false && vowOrCons === 'constanant'){
 
-        //lose turn 
+        toggleSpinButtonOn(); 
 
     }
 
@@ -373,6 +387,32 @@ function renderPhraseBoard(phraseArr){
 
 //Rendering Functions
 
+function renderCoreModalOn(){
+
+    coreModal.style = "display:''";
+
+}
+
+function renderCoreModalOff(){
+
+    coreModal.style = "display:none";
+
+}
+
+function renderStartModalOn(){
+
+    startModal.style = "display:''";
+
+}
+
+function renderStartModalOff(){
+
+    startModal.style = "display:none";
+
+}
+
+
+
 function toggleSelectLettersBoxOn(){
 
     letterMessage.innerHTML = 'Would you like to guess a constanant or buy a vowel?';
@@ -388,9 +428,10 @@ function toggleSelectLettersBoxOff(){
 
 function toggleSolveOrSpinOn(){
 
-    letterMessage.innerHTML = 'Would you like to Solve or Spin?';
+    letterMessage.innerHTML = 'Would you like to Guess, Solve or Spin?';
 
     solveOrSpinOptions.style = "display:''";
+    toggleGuessOrBuyOptionOn();
 }
 
 function toggleSolveOrSpinOff(){
@@ -415,6 +456,7 @@ function toggleSolveInputOff(){
 
 function toggleSpinButtonOn(){
 
+    letterMessage.innerHTML = 'Click to Spin';
     spinButton.style = "display:''";
 
 }
@@ -433,6 +475,41 @@ function toggleLetterInputOff(){
 
     letterInput.style = "display:none";
 }
+
+function toggleGuessOrBuyOptionOn(){
+
+    guessOrBuyOption.style = "display:''";
+
+}
+
+function toggleGuessOrBuyOptionOff(){
+
+    guessOrBuyOption.style = "display:none";
+
+}
+
+function toggleThreeButtonOn(){
+
+    toggleSolveOrSpinOn();
+    toggleGuessOrBuyOptionOn();
+
+}
+
+
+$('#startButton').on('click', function(){
+
+    renderStartModalOff();
+    startRound();
+
+});
+
+
+$('#guessOrBuyOption').on('click', function(){
+
+    toggleSolveOrSpinOff();
+    toggleSelectLettersBoxOn();
+
+});
 
 $('#spinOption').on('click', function(){
 
@@ -453,13 +530,14 @@ $('#solveInput').keypress(function(event){
     if(event.which == 13 || event.which == 'Enter'){
 
         var testResult = testPhrase(solveInput.value, wheelOfFortune.phraseOnBoard.phrase);
+        toggleSolveInputOff();
         if(testResult === true){
 
             //this will be the celebration
 
         }else {
 
-            //goes to next turn 
+            toggleSpinButtonOn(); 
 
         }
 
@@ -489,6 +567,7 @@ function testPhrase(solve, test){
 //might be able to use set timeout to render new spot
 function startRound(){
 
+    renderCoreModalOn();
     wheelOfFortune.phraseOnBoard.turnPhraseToArray(wheelOfFortune.phraseOnBoard.phrase);
     renderPhraseBoard(wheelOfFortune.phraseOnBoard.phraseAsArray);
     toggleSpinButtonOn();

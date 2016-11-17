@@ -6,11 +6,26 @@
         <link type="text/css" rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div id="phraseBoard"><h1>WELCOME TO WHEEL OF FORTUNE</h1></div>
-        <div id="scoreBox">Score</div>
-        <div id="wheelLocation">Wheel Location</div>
+
+        <div id="startModal" style="display:''">
+
+            <h1>Wheel of Fortune</h1>
+            <button id="startButton">Press To Start Game</button>
+
+        </div>
+
+
+        <div id="coreModal" style="display:none">
+            <div id="phraseBoard"></div>
+            <div id="scoreBox">Score</div>
+            <div id="wheelLocation">Wheel Location</div>
+            
+            <p id="letterMessage"></p>
+        </div>
+
+
+
         <button id="spinButton" style="display:none">Spin</button>
-        <p id="letterMessage"></p>
         <div id="selectLettersBox" style="display:none">
             <button id="chooseConstanant">Choose Constanant</button><button id="buyVowel">Buy Vowel</button>
             
@@ -18,10 +33,10 @@
         </div>
         <div id="solveOrSpinOptions" style="display:none">
             
-            <button id="solveOption">Solve</button><button id="spinOption">Spin</button>
-            <input id="solveInput" type="text" placeholder="Please Enter Your Answer" style="display:none">
+            <button id="guessOrBuyOption" style="display:none">Guess or Buy Another</button><button id="solveOption">Solve</button><button id="spinOption">Spin</button>
         </div>
-        
+        <input id="solveInput" type="text" placeholder="Please Enter Your Answer" style="display:none">
+        <div id="celebration" style="display:none"><h1>Yay you got it right!</h1></div>
 
         <script src="jquery-3.1.1.js"></script>
         <script src="app.js"></script>
